@@ -1,4 +1,4 @@
-From bb8f751b7ef40a63f7b2eb2f6df9d5c257532f92 Mon Sep 17 00:00:00 2001
+From 897e2ec4505045aa61c7d286b75847dbf9ca13f7 Mon Sep 17 00:00:00 2001
 From: Ken mays <kmays2000@gmail.com>
 Date: Tue, 22 Oct 2024 05:12:03 +0000
 Subject: Fix for std::{wcstoumax|wcstoimax} issue on Haiku R1b5
@@ -31,6 +31,29 @@ index 7a09438..fb136af 100644
  }
  
  template <>
+-- 
+2.45.2
+
+
+From b3febdd24fc3dac55fa9d287f830d8f6b85f2a35 Mon Sep 17 00:00:00 2001
+From: "Mika T. Lindqvist" <postmaster@raasu.org>
+Date: Sun, 3 Nov 2024 16:12:33 +0000
+Subject: Don't install desktop file and pixmap for Haiku.
+
+
+diff --git a/cmake/Install.cmake b/cmake/Install.cmake
+index 6615e17..0c06e9b 100644
+--- a/cmake/Install.cmake
++++ b/cmake/Install.cmake
+@@ -168,7 +168,7 @@ if(GETTEXT_FOUND)
+   endforeach()
+ endif()
+ 
+-if (NOT APPLE)
++if (NOT APPLE AND NOT HAIKU)
+     install(FILES fish.desktop DESTINATION ${rel_datadir}/applications)
+     install(FILES ${SPHINX_SRC_DIR}/python_docs_theme/static/fish.png DESTINATION ${rel_datadir}/pixmaps)
+ endif()
 -- 
 2.45.2
 
