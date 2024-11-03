@@ -62,7 +62,8 @@ BUILD()
 	cmake -B build -S . \
 		$cmakeDirArgs \
 		-DCMAKE_BUILD_TYPE=RelWithDebInfo \
-		-DCMAKE_INSTALL_BINDIR=bin
+		-DCMAKE_INSTALL_BINDIR=bin \
+		-DCMAKE_INSTALL_PKGCONFIGDIR=$developLibDir/pkgconfig
 
 	make -C build $jobArgs
 }

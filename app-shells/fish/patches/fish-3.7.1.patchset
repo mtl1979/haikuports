@@ -1,4 +1,4 @@
-From 897e2ec4505045aa61c7d286b75847dbf9ca13f7 Mon Sep 17 00:00:00 2001
+From 937cb69f37a93cc5e30d3fa6ad836307ccf058f3 Mon Sep 17 00:00:00 2001
 From: Ken mays <kmays2000@gmail.com>
 Date: Tue, 22 Oct 2024 05:12:03 +0000
 Subject: Fix for std::{wcstoumax|wcstoimax} issue on Haiku R1b5
@@ -35,14 +35,14 @@ index 7a09438..fb136af 100644
 2.45.2
 
 
-From b3febdd24fc3dac55fa9d287f830d8f6b85f2a35 Mon Sep 17 00:00:00 2001
+From 35d23534a82d5dc940c9bf9a6980f50a9185f51a Mon Sep 17 00:00:00 2001
 From: "Mika T. Lindqvist" <postmaster@raasu.org>
 Date: Sun, 3 Nov 2024 16:12:33 +0000
 Subject: Don't install desktop file and pixmap for Haiku.
 
 
 diff --git a/cmake/Install.cmake b/cmake/Install.cmake
-index 6615e17..0c06e9b 100644
+index 6615e17..c85de39 100644
 --- a/cmake/Install.cmake
 +++ b/cmake/Install.cmake
 @@ -168,7 +168,7 @@ if(GETTEXT_FOUND)
@@ -54,6 +54,54 @@ index 6615e17..0c06e9b 100644
      install(FILES fish.desktop DESTINATION ${rel_datadir}/applications)
      install(FILES ${SPHINX_SRC_DIR}/python_docs_theme/static/fish.png DESTINATION ${rel_datadir}/pixmaps)
  endif()
+-- 
+2.45.2
+
+
+From ac71dc33ef73d7a9a72a6a68c7fd78a959170b2b Mon Sep 17 00:00:00 2001
+From: "Mika T. Lindqvist" <postmaster@raasu.org>
+Date: Sun, 3 Nov 2024 19:46:34 +0000
+Subject: Fix pkgconfig directory
+
+
+diff --git a/cmake/Install.cmake b/cmake/Install.cmake
+index c85de39..4abf479 100644
+--- a/cmake/Install.cmake
++++ b/cmake/Install.cmake
+@@ -17,6 +17,15 @@ set(mandir ${CMAKE_INSTALL_MANDIR})
+ set(datadir ${CMAKE_INSTALL_FULL_DATADIR})
+ file(RELATIVE_PATH rel_datadir ${CMAKE_INSTALL_PREFIX} ${datadir})
+ 
++if(CMAKE_INSTALL_FULL_PKGCONFIGDIR)
++  set(pkgconfigdir ${CMAKE_INSTALL_FULL_PKGCONFIGDIR})
++elseif(CMAKE_INSTALL_PKGCONFIGDIR)
++  set(pkgconfigdir ${CMAKE_INSTALL_PKGCONFIGDIR})
++else()
++  set(pkgconfigdir "${CMAKE_INSTALL_DATADIR}/pkgconfig")
++endif()
++file(RELATIVE_PATH rel_pkgconfigdir ${CMAKE_INSTALL_PREFIX} ${pkgconfigdir})
++
+ set(docdir ${CMAKE_INSTALL_DOCDIR})
+ 
+ # Comment at the top of some .in files
+@@ -104,7 +113,7 @@ install(FILES share/config.fish
+ fish_create_dirs(${rel_datadir}/fish/vendor_completions.d ${rel_datadir}/fish/vendor_functions.d
+     ${rel_datadir}/fish/vendor_conf.d)
+ 
+-fish_try_create_dirs(${rel_datadir}/pkgconfig)
++fish_try_create_dirs(${rel_pkgconfigdir})
+ configure_file(fish.pc.in fish.pc.noversion @ONLY)
+ 
+ add_custom_command(OUTPUT fish.pc
+@@ -117,7 +126,7 @@ add_custom_command(OUTPUT fish.pc
+ add_custom_target(build_fish_pc ALL DEPENDS fish.pc)
+ 
+ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/fish.pc
+-        DESTINATION ${rel_datadir}/pkgconfig)
++        DESTINATION ${rel_pkgconfigdir})
+ 
+ install(DIRECTORY share/completions/
+         DESTINATION ${rel_datadir}/fish/completions
 -- 
 2.45.2
 
